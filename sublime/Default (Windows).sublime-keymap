@@ -1,0 +1,10 @@
+[
+	// commenting
+	{ "keys": ["ctrl+k"], "command": "toggle_comment", "args": { "block": false } },
+	{ "keys": ["ctrl+shift+k"], "command": "toggle_comment", "args": { "block": true } },
+	// tab navigation
+	{ "keys": ["ctrl+tab"], "command": "next_view" },
+	{ "keys": ["ctrl+shift+tab"], "command": "prev_view" },
+	// revert
+	{ "keys": ["ctrl+shift+r"], "command": "revert" },
+]

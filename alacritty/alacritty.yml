@@ -1,0 +1,56 @@
+live_config_reload: false
+
+shell:
+  program: "cmd.exe"
+  args:
+    - "/k cls" # running an empty command clears the default message
+
+import:
+  - "~/AppData/Roaming/alacritty/dracula.yml"
+
+window:
+  # opacity: 0.99
+  # dimensions:
+  #   columns: 80
+  #   lines: 30
+  padding:
+    x: 10
+    y: 10
+  dynamic_padding: false # Spread additiona lpadding evenly around the terminal content.
+
+font:
+  normal:
+    family: "Fira Code"
+    style: Regular
+  size: 13.0 # point size
+  offset:
+    x: 1
+    y: 1
+
+scrolling:
+  history: 5000
+  auto_scroll: true
+
+cursor:
+  style: Block
+  unfocused_hollow: true
+
+# selection:
+#   save_to_clipboard: true
+
+mouse_bindings:
+ - { mouse: Middle, action: PasteSelection }
+
+key_bindings: # (Windows, Linux, and BSD only)
+  - { key: V,         mods: Control|Shift,  action: Paste             } # paste
+  - { key: C,         mods: Control|Shift,  action: Copy              } # copy
+  - { key: L,         mods: Control,        chars: "\x0Dcls\x0D"      } # clear screen
+  - { key: J,         mods: Control,        action: ScrollPageDown    } # page down
+  - { key: K,         mods: Control,        action: ScrollPageUp      } # page up
+  - { key: J,         mods: Control|Shift,  action: ScrollToBottom    } # to bottom
+  - { key: K,         mods: Control|Shift,  action: ScrollToTop       } # to top
+  - { key: Key0,      mods: Control,        action: ResetFontSize     } # reset font size
+  - { key: Equals,    mods: Control,        action: IncreaseFontSize  } # increase font size
+  - { key: Minus,     mods: Control,        action: DecreaseFontSize  } # decrease font size
+  # - { key: Add,       mods: Control,        action: IncreaseFontSize  }
+  # - { key: Subtract,  mods: Control,        action: DecreaseFontSize  }
