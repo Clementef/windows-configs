@@ -12,14 +12,137 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- setup plugins, leader necessary
+-- install plugins, leader necessary
 vim.g.mapleader = ","
 require("lazy").setup({
-  {"nvim-treesitter/nvim-treesitter", build = ":TSUpdate"},
-  'Mofiqul/dracula.nvim',
   'preservim/nerdtree',
-  {'nvim-lualine/lualine.nvim', requires = { 'nvim-tree/nvim-web-devicons', opt = true }}
+  'Mofiqul/dracula.nvim',
+  {
+    'nvim-lualine/lualine.nvim', 
+    requires = { 'nvim-tree/nvim-web-devicons', 
+                  opt = true }
+  },
+  {
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate"
+  },
+  {
+    "kylechui/nvim-surround",
+    version = "*", -- Use for stability; omit to use `main` branch for the latest features
+    event = "VeryLazy",
+    config = function()
+        require("nvim-surround").setup({
+            -- Configuration here, or leave empty to use defaults
+        })
+    end
+  },
+  {
+    'numToStr/Comment.nvim',
+    opts = {
+        -- add any options here
+    },
+    lazy = false,
+  },
+  { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
+  {
+    'nvim-telescope/telescope.nvim', tag = '0.1.5',
+    dependencies = { 'nvim-lua/plenary.nvim' }
+  },
+  {
+    "folke/zen-mode.nvim",
+    opts = {
+      window = {
+        backdrop = 0.95, -- shade the backdrop of the Zen window. Set to 1 to keep the same as Normal
+        -- height and width can be:
+        -- * an absolute number of cells when > 1
+        -- * a percentage of the width / height of the editor when <= 1
+        -- * a function that returns the width or the height
+        width = .6, -- width of the Zen window
+        height = 1, -- height of the Zen window
+        -- by default, no options are changed for the Zen window
+        -- uncomment any of the options below, or add other vim.wo options you want to apply
+        options = {
+          signcolumn = "no", -- disable signcolumn
+          -- number = false, -- disable number column
+          -- relativenumber = false, -- disable relative numbers
+          -- cursorline = false, -- disable cursorline
+          -- cursorcolumn = false, -- disable cursor column
+          -- foldcolumn = "0", -- disable fold column
+          -- list = false, -- disable whitespace characters
+        },
+      }
+    },
+    plugins = {
+      -- disable some global vim options (vim.o...)
+      -- comment the lines to not apply the options
+      options = {
+        enabled = true,
+        ruler = false, -- disables the ruler text in the cmd line area
+        showcmd = false, -- disables the command in the last line of the screen
+        -- you may turn on/off statusline in zen mode by setting 'laststatus' 
+        -- statusline will be shown only if 'laststatus' == 3
+        laststatus = 0, -- turn off the statusline in zen mode
+      },
+    },
+  },
 })
+
+-- plugin setup
+
+-- lualine
+require('lualine').setup()
+
+-- nvim surround
+require("nvim-surround").setup()
+
+-- indent blanklines
+require("ibl").setup{
+  scope = { enabled = true, char = "▎", show_start = false, show_end = false, highlight = { "Label" },},
+  indent = { highlight = { "LineNr" }, char = "▎", smart_indent_cap = true}
+}
+
+--treesitter
+require'nvim-treesitter.configs'.setup {
+  -- A list of parser names, or "all" (the five listed parsers should always be installed)
+  ensure_installed = { "c", "lua", "vim", "vimdoc", "python"},
+
+  -- Install parsers synchronously (only applied to `ensure_installed`)
+  sync_install = false,
+
+  -- Automatically install missing parsers when entering buffer
+  -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
+  auto_install = true,
+
+  -- List of parsers to ignore installing (or "all")
+  -- ignore_install = { "javascript" },
+
+  ---- If you need to change the installation directory of the parsers (see -> Advanced Setup)
+  -- parser_install_dir = "/some/path/to/store/parsers", -- Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!
+
+  highlight = {
+    enable = true,
+
+    -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
+    -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
+    -- the name of the parser)
+    -- list of language that will be disabled
+    -- disable = { "c", "rust" },
+    -- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
+    disable = function(lang, buf)
+        local max_filesize = 100 * 1024 -- 100 KB
+        local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+        if ok and stats and stats.size > max_filesize then
+            return true
+        end
+    end,
+
+    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+    -- Instead of true it can also be a list of languages
+    additional_vim_regex_highlighting = false,
+  },
+}
 
 -- set color scheme
 vim.cmd.colorscheme('dracula')
@@ -76,9 +199,6 @@ dracula.setup({
     -- end,
 })
 
--- lualine
-require('lualine').setup()
-
 function map(mode, shortcut, command)
   vim.api.nvim_set_keymap(mode, shortcut, command, { noremap = true, silent = true })
 end
@@ -98,11 +218,17 @@ opt.number = true
 opt.relativenumber = true
 -- tabs and indentation
 opt.tabstop = 4
+opt.softtabstop = 4
 opt.shiftwidth = 4
 opt.expandtab = true
 opt.autoindent = true
+opt.smartindent = true
+-- soft breaks and shifting
+opt.breakindent = true
+opt.linebreak = true
+opt.breakindentopt = {'shift:4'}
 -- line wrap
-opt.wrap = false
+-- opt.wrap = false
 -- search settings
 opt.ignorecase = true
 opt.smartcase = true
@@ -115,7 +241,46 @@ opt.signcolumn = "yes"
 opt.backspace = "indent,eol,start"
 -- clipboard
 opt.clipboard:append("unnamedplus")
+-- default right split
+opt.splitright = true
+opt.splitbelow = true
 
 -- keymap
 nmap('<C-n>', ':NERDTreeToggle<CR>')
 nmap('<C-f>', ':NERDTreeFind<CR>')
+  -- nerdtree
+nmap(' ', ':nohl<CR>')
+  -- remove highlights
+nmap('<leader>r', ':!gcc % -o out.exe & out.exe <CR>')
+  -- compile and run in C
+nmap('<leader>e', ':cd %:p:h | !explorer .<CR>')
+  -- change pwd to file's parent and open explorer.
+nmap('<C-s>', ':w<CR>')
+  -- save
+nmap(';',':')
+  -- rebind command
+nmap('<C-a>','ggVG')
+  -- select all
+nmap('<C-h>','<C-w>h')
+nmap('<C-j>','<C-w>j')
+nmap('<C-k>','<C-w>k')
+nmap('<C-l>','<C-w>l')
+  -- split navigation
+nmap('<leader>s', '<C-w>v')
+nmap('<leader>S', '<C-w>s')
+  -- create splits
+nmap('<C-o>', '<C-w>>')
+nmap('<C-y>', '<C-w><')
+nmap('<C-u>', '<C-w>+')
+nmap('<C-i>', '<C-w>-')
+  -- resize splits
+local telescope = require('telescope.builtin')
+vim.keymap.set('n', '<leader>ff', telescope.find_files, {})
+vim.keymap.set('n', '<leader>fg', telescope.live_grep, {})
+vim.keymap.set('n', '<leader>fb', telescope.buffers, {})
+vim.keymap.set('n', '<leader>fh', telescope.help_tags, {})
+  -- telescope
+nmap('<leader>l',':Lazy<CR>')
+  -- Lazy
+nmap('<leader>z',':ZenMode<CR>')
+  -- Zen Mode
