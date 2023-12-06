@@ -63,17 +63,17 @@ dracula.setup({
   -- overrides the default highlights with table see `:h synIDattr`
   overrides = {},
   -- You can use overrides as table like this
-  -- overrides = {
-  --   NonText = { fg = "white" }, -- set NonText fg to white
-  --   NvimTreeIndentMarker = { link = "NonText" }, -- link to NonText highlight
-  --   Nothing = {} -- clear highlight of Nothing
-  -- },
-  -- Or you can also use it like a function to get color from theme
-  -- overrides = function (colors)
-  --   return {
-  --     NonText = { fg = colors.white }, -- set NonText fg to white of theme
-  --   }
-  -- end,
+    -- overrides = {
+    --   NonText = { fg = "white" }, -- set NonText fg to white
+    --   NvimTreeIndentMarker = { link = "NonText" }, -- link to NonText highlight
+    --   Nothing = {} -- clear highlight of Nothing
+    -- },
+    -- Or you can also use it like a function to get color from theme
+    -- overrides = function (colors)
+    --   return {
+    --     NonText = { fg = colors.white }, -- set NonText fg to white of theme
+    --   }
+    -- end,
 })
 
 -- lualine
@@ -89,7 +89,33 @@ function imap(shortcut, command)
   map('i', shortcut, command)
 end
 
--- neovim
+-- pure config
+vim.g.syntax = "enable"
+-- options
+local opt = vim.opt
+-- line numbers
+opt.number = true
+opt.relativenumber = true
+-- tabs and indentation
+opt.tabstop = 4
+opt.shiftwidth = 4
+opt.expandtab = true
+opt.autoindent = true
+-- line wrap
+opt.wrap = false
+-- search settings
+opt.ignorecase = true
+opt.smartcase = true
+-- cursor line
+opt.cursorline = true
+-- colors
+opt.termguicolors = true
+opt.signcolumn = "yes"
+-- backspace
+opt.backspace = "indent,eol,start"
+-- clipboard
+opt.clipboard:append("unnamedplus")
+
+-- keymap
 nmap('<C-n>', ':NERDTreeToggle<CR>')
 nmap('<C-f>', ':NERDTreeFind<CR>')
-
