@@ -85,6 +85,36 @@ require("lazy").setup({
       },
     },
   },
+  { 'tpope/vim-repeat' },
+  { 'derektata/lorem.nvim' },
+  {
+    'ggandor/leap.nvim', 
+    dependencies = { 'tpope/vim-repeat' }
+  },
+  {
+    "nvim-neorg/neorg",
+    build = ":Neorg sync-parsers",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      require("neorg").setup {
+        load = {
+          ["core.defaults"] = {},
+          ["core.concealer"] = {},
+          ["core.dirman"] = {
+            config = {
+              workspaces = {
+                notes = "%USERPROFIE%/Documents/notes",
+              },
+              default_workspace = "notes",
+            },
+          },
+        },
+      }
+
+      vim.wo.foldlevel = 99
+      vim.wo.conceallevel = 2
+    end,
+  }
 })
 
 -- plugin setup
@@ -100,6 +130,9 @@ require("ibl").setup{
   scope = { enabled = true, char = "▎", show_start = false, show_end = false, highlight = { "Label" },},
   indent = { highlight = { "LineNr" }, char = "▎", smart_indent_cap = true}
 }
+
+  -- leap
+require('leap').add_default_mappings()
 
 --treesitter
 require'nvim-treesitter.configs'.setup {
@@ -233,10 +266,10 @@ opt.breakindentopt = {'shift:4'}
 opt.ignorecase = true
 opt.smartcase = true
 -- cursor line
-opt.cursorline = true
+-- opt.cursorline = true
 -- colors
 opt.termguicolors = true
-opt.signcolumn = "yes"
+-- opt.signcolumn = "yes"
 -- backspace
 opt.backspace = "indent,eol,start"
 -- clipboard
@@ -284,3 +317,21 @@ nmap('<leader>l',':Lazy<CR>')
   -- Lazy
 nmap('<leader>z',':ZenMode<CR>')
   -- Zen Mode
+nmap('<C-l>l', ':LoremIpsum<CR>')
+nmap('<C-l>1', ':LoremIpsum 100<CR>')
+nmap('<C-l>2', ':LoremIpsum 200<CR>')
+nmap('<C-l>3', ':LoremIpsum 300<CR>')
+nmap('<C-l>4', ':LoremIpsum 400<CR>')
+nmap('<C-l>5', ':LoremIpsum 500<CR>')
+nmap('<C-l>6', ':LoremIpsum 600<CR>')
+nmap('<C-l>7', ':LoremIpsum 700<CR>')
+nmap('<C-l>7', ':LoremIpsum 700<CR>')
+nmap('<C-l>7', ':LoremIpsum 700<CR>')
+nmap('<C-l>8', ':LoremIpsum 800<CR>')
+nmap('<C-l>9', ':LoremIpsum 900<CR>')
+  -- Lorem
+nmap('<C-o>', 'o<ESC>')
+nmap('<C-i>', 'O<ESC>')
+  -- insert line in normal mode
+nmap('<leader>h', ':checkhealth<CR>')
+  -- check health
