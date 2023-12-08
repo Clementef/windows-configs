@@ -1,11 +1,18 @@
+-- mapping functions
 function map(mode, shortcut, command)
   vim.api.nvim_set_keymap(mode, shortcut, command, { noremap = true, silent = true })
 end
+
 function nmap(shortcut, command)
   map('n', shortcut, command)
 end
+
 function imap(shortcut, command)
   map('i', shortcut, command)
+end
+
+function vmap(shortcut, command)
+  map('v', shortcut, command)
 end
 
 -- nerdtree
@@ -81,21 +88,6 @@ nmap('<C-g>', 'O<ESC>')
 
 -- check health
 nmap('<leader>h', ':checkhealth<CR>')
-
--- move lineskk
-nmap('<C-Up>', ':m -2<CR>')
-nmap('<C-Down>', ':m +1<CR>')
-
--- undo
--- nmap('<C-z>', 'u')
-
--- rebind comment NOT WORKING
--- vim.api.nvim_set_keymap('n','<C-m>', 'gcc', {})
--- vim.api.nvim_set_keymap('v','<C-m>', 'gc', {})
-
--- indent and unindent
--- nmap('<C-]>', '>>')
--- nmap('<C-[>', '<<')
 
 -- neorg
 nmap('<C-c>', ':Neorg toggle-concealer<CR>')
