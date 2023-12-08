@@ -16,16 +16,20 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.mapleader = ","
 require("lazy").setup({
   'preservim/nerdtree',
+
   'Mofiqul/dracula.nvim',
+
   {
-    'nvim-lualine/lualine.nvim', 
-    requires = { 'nvim-tree/nvim-web-devicons', 
-                  opt = true }
+    'nvim-lualine/lualine.nvim',
+    -- requires = { 'nvim-tree/nvim-web-devicons', 
+    --               opt = true }
   },
+
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate"
   },
+
   {
     "kylechui/nvim-surround",
     version = "*", -- Use for stability; omit to use `main` branch for the latest features
@@ -36,6 +40,7 @@ require("lazy").setup({
         })
     end
   },
+
   {
     'numToStr/Comment.nvim',
     opts = {
@@ -43,11 +48,14 @@ require("lazy").setup({
     },
     lazy = false,
   },
-  { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
+
+  { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = { } },
+
   {
     'nvim-telescope/telescope.nvim', tag = '0.1.5',
     dependencies = { 'nvim-lua/plenary.nvim' }
   },
+
   {
     "folke/zen-mode.nvim",
     opts = {
@@ -57,12 +65,12 @@ require("lazy").setup({
         -- * an absolute number of cells when > 1
         -- * a percentage of the width / height of the editor when <= 1
         -- * a function that returns the width or the height
-        width = .6, -- width of the Zen window
+        width = .5, -- width of the Zen window
         height = 1, -- height of the Zen window
         -- by default, no options are changed for the Zen window
         -- uncomment any of the options below, or add other vim.wo options you want to apply
         options = {
-          signcolumn = "no", -- disable signcolumn
+          -- signcolumn = "no", -- disable signcolumn
           -- number = false, -- disable number column
           -- relativenumber = false, -- disable relative numbers
           -- cursorline = false, -- disable cursorline
@@ -72,25 +80,56 @@ require("lazy").setup({
         },
       }
     },
+
     plugins = {
       -- disable some global vim options (vim.o...)
       -- comment the lines to not apply the options
       options = {
-        enabled = true,
-        ruler = false, -- disables the ruler text in the cmd line area
-        showcmd = false, -- disables the command in the last line of the screen
+        -- enabled = true,
+        -- ruler = false, -- disables the ruler text in the cmd line area
+        -- showcmd = false, -- disables the command in the last line of the screen
         -- you may turn on/off statusline in zen mode by setting 'laststatus' 
         -- statusline will be shown only if 'laststatus' == 3
-        laststatus = 0, -- turn off the statusline in zen mode
+        -- laststatus = 0, -- turn off the statusline in zen mode
       },
     },
+
   },
+
   { 'tpope/vim-repeat' },
+
   { 'derektata/lorem.nvim' },
+
+  {
+      "startup-nvim/startup.nvim",
+      requires = {"nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim"},
+      -- config = function()
+      --     require"startup".setup()
+      -- end
+  },
+
   {
     'ggandor/leap.nvim', 
     dependencies = { 'tpope/vim-repeat' }
   },
+
+	{
+	  "folke/which-key.nvim",
+	  event = "VeryLazy",
+	  init = function()
+	    vim.o.timeout = true
+	    vim.o.timeoutlen = 300
+	  end,
+	  opts = {
+	    -- your configuration comes here
+	    -- or leave it empty to use the default settings
+	    -- refer to the configuration section below
+	  }
+	},
+
+  {'dstein64/vim-startuptime'},
+  -- {'dkarter/bullets.vim'},
+
   {
     "nvim-neorg/neorg",
     build = ":Neorg sync-parsers",
@@ -98,37 +137,89 @@ require("lazy").setup({
     config = function()
       require("neorg").setup {
         load = {
-          ["core.defaults"] = {},
-          ["core.concealer"] = {},
-          ["core.dirman"] = {
+          ["core.defaults"] = {}, -- Loads default behaviour
+          ["core.concealer"] = {}, -- Adds pretty icons to your documents
+          ["core.dirman"] = { -- Manages Neorg workspaces
             config = {
               workspaces = {
-                notes = "%USERPROFIE%/Documents/notes",
+                notes = "~/notes",
               },
-              default_workspace = "notes",
             },
           },
         },
       }
-
-      vim.wo.foldlevel = 99
-      vim.wo.conceallevel = 2
     end,
-  }
+  },
+
 })
 
 -- plugin setup
 
+vim.g.startup_bookmarks = {
+  ["I"] = '~/Appdata/Local/nvim/init.lua',
+  ["D"] = '~/Documents',
+  ["N"] = '~/Documents/notes',
+  ["H"] = '~/Documents/hugo',
+  ["C"] = '~/Documents/C',
+}
+
+require("startup").setup({theme = "spleenify"})
+require('which-key').setup()
+require('Comment').setup()
+
 -- lualine
-require('lualine').setup()
+require('lualine').setup {
+  options = {
+    icons_enabled = true,
+    theme = 'auto',
+    section_separators = { left = '', right = '' },
+    component_separators = { left = '|', right = '|' },
+    disabled_filetypes = {
+      statusline = {},
+      winbar = {},
+    },
+
+    ignore_focus = {},
+    always_divide_middle = true,
+    globalstatus = true,
+    -- refresh = {
+    --   statusline = 1000,
+    --   tabline = 1000,
+    --   winbar = 1000,
+    -- }
+  },
+
+  sections = {
+    lualine_a = {'mode'},
+    lualine_b = {'branch', 'diff', 'diagnostics'},
+    lualine_c = {'filename'},
+    lualine_x = {'encoding', 'fileformat', 'filetype'},
+    lualine_y = {'progress'},
+    lualine_z = {'location'}
+  },
+
+  inactive_sections = {
+    lualine_a = {},
+    lualine_b = {},
+    lualine_c = {'filename'},
+    lualine_x = {'location'},
+    lualine_y = {},
+    lualine_z = {}
+  },
+
+  tabline = {},
+  winbar = {},
+  inactive_winbar = {},
+  extensions = {}
+}
 
 -- nvim surround
 require("nvim-surround").setup()
 
 -- indent blanklines
 require("ibl").setup{
-  scope = { enabled = true, char = "▎", show_start = false, show_end = false, highlight = { "Label" },},
-  indent = { highlight = { "LineNr" }, char = "▎", smart_indent_cap = true}
+    scope = { enabled = true, char = "▎", show_start = false, show_end = false, highlight = { "Label" },},
+    indent = { highlight = { "LineNr" }, char = "▎", smart_indent_cap = true}
 }
 
   -- leap
@@ -137,7 +228,7 @@ require('leap').add_default_mappings()
 --treesitter
 require'nvim-treesitter.configs'.setup {
   -- A list of parser names, or "all" (the five listed parsers should always be installed)
-  ensure_installed = { "c", "lua", "vim", "vimdoc", "python"},
+  ensure_installed = { "c", "lua", "vim", "vimdoc", "python", "html", "css"},
 
   -- Install parsers synchronously (only applied to `ensure_installed`)
   sync_install = false,
@@ -182,32 +273,32 @@ vim.cmd.colorscheme('dracula')
 local dracula = require("dracula")
 dracula.setup({
   -- customize dracula color palette
-  colors = {
-    bg = "#282A36",
-    fg = "#F8F8F2",
-    selection = "#44475A",
-    comment = "#6272A4",
-    red = "#FF5555",
-    orange = "#FFB86C",
-    yellow = "#F1FA8C",
-    green = "#50fa7b",
-    purple = "#BD93F9",
-    cyan = "#8BE9FD",
-    pink = "#FF79C6",
-    bright_red = "#FF6E6E",
-    bright_green = "#69FF94",
-    bright_yellow = "#FFFFA5",
-    bright_blue = "#D6ACFF",
-    bright_magenta = "#FF92DF",
-    bright_cyan = "#A4FFFF",
-    bright_white = "#FFFFFF",
-    menu = "#21222C",
-    visual = "#3E4452",
-    gutter_fg = "#4B5263",
-    nontext = "#3B4048",
-    white = "#ABB2BF",
-    black = "#191A21",
-  },
+  -- colors = {
+  --   bg = "#282A36",
+  --   fg = "#F8F8F2",
+  --   selection = "#44475A",
+  --   comment = "#6272A4",
+  --   red = "#FF5555",
+  --   orange = "#FFB86C",
+  --   yellow = "#F1FA8C",
+  --   green = "#50fa7b",
+  --   purple = "#BD93F9",
+  --   cyan = "#8BE9FD",
+  --   pink = "#FF79C6",
+  --   bright_red = "#FF6E6E",
+  --   bright_green = "#69FF94",
+  --   bright_yellow = "#FFFFA5",
+  --   bright_blue = "#D6ACFF",
+  --   bright_magenta = "#FF92DF",
+  --   bright_cyan = "#A4FFFF",
+  --   bright_white = "#FFFFFF",
+  --   menu = "#21222C",
+  --   visual = "#3E4452",
+  --   gutter_fg = "#4B5263",
+  --   nontext = "#3B4048",
+  --   white = "#ABB2BF",
+  --   black = "#191A21",
+  -- },
   -- show the '~' characters after the end of buffers
   show_end_of_buffer = true, -- default false
   -- use transparent background
@@ -254,21 +345,20 @@ opt.tabstop = 4
 opt.softtabstop = 4
 opt.shiftwidth = 4
 opt.expandtab = true
-opt.autoindent = true
-opt.smartindent = true
+opt.autoindent = false
+opt.smartindent = false
 -- soft breaks and shifting
-opt.breakindent = true
-opt.linebreak = true
-opt.breakindentopt = {'shift:4'}
+-- opt.breakindent = true
+-- opt.linebreak = true
+-- opt.breakindentopt = {'shift:1'}
+-- opt.showbreak = ">>"
 -- line wrap
--- opt.wrap = false
+opt.wrap = false
 -- search settings
 opt.ignorecase = true
 opt.smartcase = true
 -- cursor line
 -- opt.cursorline = true
--- colors
-opt.termguicolors = true
 -- opt.signcolumn = "yes"
 -- backspace
 opt.backspace = "indent,eol,start"
@@ -282,56 +372,86 @@ opt.splitbelow = true
 nmap('<C-n>', ':NERDTreeToggle<CR>')
 nmap('<C-f>', ':NERDTreeFind<CR>')
   -- nerdtree
+
 nmap(' ', ':nohl<CR>')
+nmap('<ESC>', ':nohl<CR>')
   -- remove highlights
+
 nmap('<leader>r', ':!gcc % -o out.exe & out.exe <CR>')
   -- compile and run in C
+
 nmap('<leader>e', ':cd %:p:h | !explorer .<CR>')
-  -- change pwd to file's parent and open explorer.
+nmap('<leader>c', ':cd %:p:h | !start cmd.exe<CR>')
+  -- change pwd to file's parent and open windows software.
+
 nmap('<C-s>', ':w<CR>')
   -- save
+
 nmap(';',':')
   -- rebind command
-nmap('<C-a>','ggVG')
+
+nmap('<C-a>','GVgg')
   -- select all
+
 nmap('<C-h>','<C-w>h')
 nmap('<C-j>','<C-w>j')
 nmap('<C-k>','<C-w>k')
 nmap('<C-l>','<C-w>l')
   -- split navigation
+
 nmap('<leader>s', '<C-w>v')
 nmap('<leader>S', '<C-w>s')
   -- create splits
-nmap('<C-o>', '<C-w>>')
-nmap('<C-y>', '<C-w><')
-nmap('<C-u>', '<C-w>+')
-nmap('<C-i>', '<C-w>-')
+
+nmap('<C-u>', '<C-w><')
+nmap('<C-i>', '<C-w>+')
+nmap('<C-o>', '<C-w>-')
+nmap('<C-p>', '<C-w>>')
   -- resize splits
+
 local telescope = require('telescope.builtin')
 vim.keymap.set('n', '<leader>ff', telescope.find_files, {})
 vim.keymap.set('n', '<leader>fg', telescope.live_grep, {})
 vim.keymap.set('n', '<leader>fb', telescope.buffers, {})
 vim.keymap.set('n', '<leader>fh', telescope.help_tags, {})
   -- telescope
+
 nmap('<leader>l',':Lazy<CR>')
   -- Lazy
-nmap('<leader>z',':ZenMode<CR>')
+
+nmap('<C-z>',':ZenMode<CR>')
   -- Zen Mode
-nmap('<C-l>l', ':LoremIpsum<CR>')
-nmap('<C-l>1', ':LoremIpsum 100<CR>')
-nmap('<C-l>2', ':LoremIpsum 200<CR>')
-nmap('<C-l>3', ':LoremIpsum 300<CR>')
-nmap('<C-l>4', ':LoremIpsum 400<CR>')
-nmap('<C-l>5', ':LoremIpsum 500<CR>')
-nmap('<C-l>6', ':LoremIpsum 600<CR>')
-nmap('<C-l>7', ':LoremIpsum 700<CR>')
-nmap('<C-l>7', ':LoremIpsum 700<CR>')
-nmap('<C-l>7', ':LoremIpsum 700<CR>')
-nmap('<C-l>8', ':LoremIpsum 800<CR>')
-nmap('<C-l>9', ':LoremIpsum 900<CR>')
+
+nmap('<leader>ii', ':LoremIpsum<CR>')
+nmap('<leader>i1', ':LoremIpsum 100<CR>')
+nmap('<leader>i2', ':LoremIpsum 200<CR>')
+nmap('<leader>i3', ':LoremIpsum 300<CR>')
+nmap('<leader>i4', ':LoremIpsum 400<CR>')
+nmap('<leader>i5', ':LoremIpsum 500<CR>')
+nmap('<leader>i6', ':LoremIpsum 600<CR>')
+nmap('<leader>i7', ':LoremIpsum 700<CR>')
+nmap('<leader>i7', ':LoremIpsum 700<CR>')
+nmap('<leader>i7', ':LoremIpsum 700<CR>')
+nmap('<leader>i8', ':LoremIpsum 800<CR>')
+nmap('<leader>i9', ':LoremIpsum 900<CR>')
   -- Lorem
-nmap('<C-o>', 'o<ESC>')
-nmap('<C-i>', 'O<ESC>')
+
+nmap('<C-b>', 'o<ESC>')
+nmap('<C-g>', 'O<ESC>')
   -- insert line in normal mode
+
 nmap('<leader>h', ':checkhealth<CR>')
   -- check health
+
+nmap('<C-Up>', ':m -2<CR>')
+nmap('<C-Down>', ':m +1<CR>')
+  -- move lineskk
+
+-- nmap('<C-z>', 'u')
+  -- undo
+
+-- vim.api.nvim_set_keymap('n','<C-m>', 'gcc', {})
+-- vim.api.nvim_set_keymap('v','<C-m>', 'gc', {})
+nmap('<C-]>', ':s/^/\t<CR>:nohl<CR>')
+nmap('<C-[>', ':s/^\t/<CR>:nohl<CR>')
+nmap('<C-c>', ':Neorg toggle-concealer<CR>')
