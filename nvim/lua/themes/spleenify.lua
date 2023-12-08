@@ -16,7 +16,7 @@ for key, file in pairs(user_bookmarks) do
     user_bookmark_mappings[key] = "<cmd>e " .. file .. "<CR>"
 end
 
-local settings = {
+return {
 
     header = {
         type = "text",
@@ -96,5 +96,3 @@ local settings = {
     }
 
 }
-
-return settings
