@@ -15,9 +15,9 @@ function vmap(shortcut, command)
   map('v', shortcut, command)
 end
 
--- nerdtree
-nmap('<C-n>', ':NERDTreeToggle<CR>')
-nmap('<C-f>', ':NERDTreeFind<CR>')
+-- nvim-tree (modern, lua-based nerdtree)
+nmap('<C-n>', ':NvimTreeToggle<CR>')
+nmap('<C-f>', ':NvimTreeFindFile<CR>')
 
 -- remove highlights
 nmap(' ', ':nohl<CR>')

@@ -1,6 +1,7 @@
 vim.cmd.colorscheme('dracula')
 -- pure config
 vim.g.syntax = "enable"
+vim.opt.guicursor = ""
 -- options
 local opt = vim.opt
 -- line numbers
