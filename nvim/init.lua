@@ -24,12 +24,20 @@ require('config.bookmarks')
 
 -- install plugins, leader necessary
 vim.g.mapleader = ","
-require("lazy").setup({
+require("lazy").setup(
   { import = "plugins" },
-})
+  {
+      defaults = { lazy = true },
+      checker = { enabled = false, notify = false },
+      debug = true,
+      ui = { border = "rounded" },
+  })
 
 -- load options
 require('config.options')
+
+-- load lsp config
+-- require('config.lsp-zero')
 
 -- load keymap
 require('config.keymap')

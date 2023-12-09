@@ -1,4 +1,6 @@
 return {
-    'tpope/vim-repeat',
+
+    'mbbill/undotree',
     event = "VeryLazy",
+
 }
