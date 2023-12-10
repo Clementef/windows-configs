@@ -1,39 +1,37 @@
 -- mapping functions
-function map(mode, shortcut, command)
-  vim.api.nvim_set_keymap(mode, shortcut, command, { noremap = true, silent = true })
-end
-
 function nmap(shortcut, command)
-  map('n', shortcut, command)
-end
-
-function imap(shortcut, command)
-  map('i', shortcut, command)
+  vim.api.nvim_set_keymap("n", shortcut, command, { noremap = true, silent = true })
 end
 
 function vmap(shortcut, command)
-  map('v', shortcut, command)
+  vim.api.nvim_set_keymap("v", shortcut, command, { noremap = true, silent = true })
 end
 
--- nvim-tree (modern, lua-based nerdtree)
-nmap('<leader>nn', '<CMD>NvimTreeToggle %:p:h<CR>')
-nmap('<leader>nf', '<CMD>NvimTreeFindFile<CR>')
-nmap('<leader>nc', '<CMD>NvimTreeCollapse<CR>')
-nmap('<leader>nt', '<CMD>NvimTreeToggle<CR>')
+function mapcmd(mode, shortcut, command, opts)
+    vim.api.nvim_set_keymap(mode, shortcut, "<CMD>" .. command .. "<CR>", opts)
+end
+
+function nmapcmd(shortcut, command)
+    mapcmd("n", shortcut, command, { noremap = true, silent = true })
+end
+
+function vmapcmd(shortcut, command)
+    mapcmd("v", shortcut, command, { noremap = true, silent = true })
+end
 
 -- remove highlights
-nmap(' ', ':nohl<CR>')
-nmap('<ESC>', ':nohl<CR>')
+nmapcmd(' ', 'nohl')
+nmapcmd('<ESC>', 'nohl')
 
 -- compile and run in C
-nmap('<leader>r', ':!gcc % -o out.exe & out.exe <CR>')
+nmapcmd('<leader>r', '!gcc % -o out.exe & out.exe')
 
 -- change pwd to file's parent and open windows software.
-nmap('<leader>e', ':cd %:p:h | !explorer .<CR>')
-nmap('<leader>c', ':cd %:p:h | !start cmd.exe<CR>')
+nmapcmd('<leader>e', 'cd %:p:h | !explorer .')
+nmapcmd('<leader>c', 'cd %:p:h | !start cmd.exe')
 
 -- save
-nmap('<C-s>', ':w<CR>')
+nmapcmd('<C-s>', 'w')
 
 -- rebind command
 nmap(';',':')
@@ -59,47 +57,49 @@ nmap('<C-Right>', '<C-w>>')
 
 -- telescope
 local telescope = require('telescope.builtin')
-vim.keymap.set("n", "<leader>ff", "<CMD>Telescope find_files theme=dropdown<CR>", {})
-vim.keymap.set("n", "<leader>fg", "<CMD>Telescope live_grep theme=dropdown<CR>", {})
-vim.keymap.set("n", "<leader>fb", "<CMD>Telescope buffers theme=dropdown<CR>", {})
-vim.keymap.set("n", "<leader>fh", "<CMD>Telescope help_tags theme=dropdown<CR>", {})
-vim.keymap.set("n", "<leader>fl", "<CMD>Telescope current_buffer_fuzzy_find theme=dropdown<CR>", {})
-vim.keymap.set("n", "<leader>fj", "<CMD>Telescope file_browser path=%:p:h select_buffer=true<CR>", {})
-vim.keymap.set("n", "<leader>fk", "<CMD>Telescope file_browser select_buffer=true<CR>", {})
+mapcmd("n", "<leader>ff", "Telescope find_files theme=dropdown", {})
+mapcmd("n", "<leader>fg", "Telescope live_grep theme=dropdown", {})
+mapcmd("n", "<leader>fb", "Telescope buffers theme=dropdown", {})
+mapcmd("n", "<leader>fh", "Telescope help_tags theme=dropdown", {})
+mapcmd("n", "<leader>fl", "Telescope current_buffer_fuzzy_find theme=dropdown", {})
+
+-- telescope file browser
+mapcmd("n", "<leader>fj", "Telescope file_browser path=%:p:h select_buffer=true", {})
+mapcmd("n", "<leader>fk", "Telescope file_browser select_buffer=true", {})
 
 -- Lazy
-nmap('<leader>l',':Lazy<CR>')
+nmapcmd('<leader>l','Lazy')
 
 -- Zen Mode
-nmap('<leader>z',':ZenMode<CR>')
+nmapcmd('<leader>z','ZenMode')
 
 -- Lorem
-nmap('<leader>ii', ':LoremIpsum<CR>')
-nmap('<leader>i1', ':LoremIpsum 100<CR>')
-nmap('<leader>i2', ':LoremIpsum 200<CR>')
-nmap('<leader>i3', ':LoremIpsum 300<CR>')
-nmap('<leader>i4', ':LoremIpsum 400<CR>')
-nmap('<leader>i5', ':LoremIpsum 500<CR>')
-nmap('<leader>i6', ':LoremIpsum 600<CR>')
-nmap('<leader>i7', ':LoremIpsum 700<CR>')
-nmap('<leader>i7', ':LoremIpsum 700<CR>')
-nmap('<leader>i7', ':LoremIpsum 700<CR>')
-nmap('<leader>i8', ':LoremIpsum 800<CR>')
-nmap('<leader>i9', ':LoremIpsum 900<CR>')
+nmapcmd('<leader>ii', 'LoremIpsum')
+nmapcmd('<leader>i1', 'LoremIpsum 100')
+nmapcmd('<leader>i2', 'LoremIpsum 200')
+nmapcmd('<leader>i3', 'LoremIpsum 300')
+nmapcmd('<leader>i4', 'LoremIpsum 400')
+nmapcmd('<leader>i5', 'LoremIpsum 500')
+nmapcmd('<leader>i6', 'LoremIpsum 600')
+nmapcmd('<leader>i7', 'LoremIpsum 700')
+nmapcmd('<leader>i7', 'LoremIpsum 700')
+nmapcmd('<leader>i7', 'LoremIpsum 700')
+nmapcmd('<leader>i8', 'LoremIpsum 800')
+nmapcmd('<leader>i9', 'LoremIpsum 900')
 
 -- insert line in normal mode
-nmap('<C-g>', 'o<ESC>')
-nmap('<C-b>', 'O<ESC>')
+nmap('<C-m>', 'o<ESC>')
+nmap('<C-n>', 'O<ESC>')
 
 -- check health
-nmap('<leader>h', ':checkhealth<CR>')
+nmapcmd('<leader>h', 'checkhealth')
 
 -- neorg
-nmap('<leader>oc', ':Neorg toggle-concealer<CR>')
-nmap('<leader>on', ':Neorg workspace notes<CR>')
+nmapcmd('<leader>oc', 'Neorg toggle-concealer')
+nmapcmd('<leader>on', 'Neorg workspace notes')
 
 -- display startup
-nmap('<leader>d', ':Startup display<CR>')
+nmapcmd('<leader>d', 'Startup display')
 
 -- D deletes line contents
 nmap('D', '0d$')
@@ -108,10 +108,16 @@ nmap('D', '0d$')
 vmap('J', ":m '>+1<CR>gv=gv")
 vmap('K', ":m '<-2<CR>gv=gv")
 
+-- indent and unindent in visual mode
+vmap("H", "<gv")
+vmap("L", ">gv")
+
 -- undo tree
-nmap('<leader>u', ':UndotreeToggle<CR>')
+nmapcmd('<leader>u', 'UndotreeToggle')
 
 -- set working directory
-vim.keymap.set('n', '<leader>p', ':cd %:p:h<CR>', {noremap = true})
-vim.keymap.set('n', '<leader>q', ':q<CR>', {noremap = true})
+mapcmd('n', '<leader>p', 'cd %:p:h', {noremap = true})
+mapcmd('n', '<leader>q', 'q', {noremap = true})
 
+-- delete current buffer
+nmapcmd('<leader>bq', 'bd')

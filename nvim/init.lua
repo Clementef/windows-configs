@@ -29,7 +29,7 @@ require("lazy").setup(
   {
       defaults = { lazy = true },
       checker = { enabled = false, notify = false },
-      debug = true,
+      debug = false,
       ui = { border = "rounded" },
   })
 
