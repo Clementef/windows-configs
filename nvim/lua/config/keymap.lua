@@ -62,6 +62,7 @@ mapcmd("n", "<leader>fg", "Telescope live_grep theme=dropdown", {})
 mapcmd("n", "<leader>fb", "Telescope buffers theme=dropdown", {})
 mapcmd("n", "<leader>fh", "Telescope help_tags theme=dropdown", {})
 mapcmd("n", "<leader>fl", "Telescope current_buffer_fuzzy_find theme=dropdown", {})
+mapcmd("n", "<leader>fo", "Telescope oldfiles theme=dropdown", {})
 
 -- telescope file browser
 mapcmd("n", "<leader>fj", "Telescope file_browser path=%:p:h select_buffer=true", {})
